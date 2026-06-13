@@ -804,6 +804,93 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   animation: float-y 2.4s ease-in-out infinite;
 }
 @media (min-width: 768px) { .scroll-cue { display: flex; } }
+
+/* =========================================================
+   MULTI-STEP FORM
+   ========================================================= */
+.form-steps-indicator {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
+}
+.form-steps-indicator .step-dot {
+  flex: 1; height: 3px; border-radius: 999px; background-color: var(--line);
+  transition: background 0.4s var(--ease);
+}
+.form-steps-indicator .step-dot.is-active,
+.form-steps-indicator .step-dot.is-done {
+  background: var(--blue-gradient);
+}
+.form-step-label {
+  font-family: var(--font-mono); font-size: 0.6875rem; text-transform: uppercase;
+  letter-spacing: 0.22em; color: var(--blue); margin-bottom: 16px;
+}
+.form-step { display: flex; flex-direction: column; gap: 20px; }
+.form-step[hidden] { display: none; }
+
+.option-list { display: flex; flex-direction: column; gap: 10px; }
+.option-card {
+  display: flex; align-items: center; gap: 12px; border: 1px solid var(--line);
+  background-color: var(--paper); border-radius: 6px; padding: 14px 16px;
+  font-size: 0.875rem; color: var(--ink-dim); cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+.option-card:hover { border-color: var(--blue-line); }
+.option-card input { accent-color: var(--blue); width: 16px; height: 16px; flex-shrink: 0; }
+.option-card:has(input:checked) {
+  border-color: var(--blue); background-color: var(--paper-elev); color: var(--ink);
+}
+
+.form-step-actions { display: flex; gap: 12px; }
+.form-step-actions .btn { flex: 1; }
+
+.form-success {
+  align-items: center; text-align: center; padding: 24px 0; gap: 16px;
+}
+.form-success-icon {
+  width: 56px; height: 56px; border-radius: 999px; display: flex; align-items: center;
+  justify-content: center; background: var(--blue-gradient); color: #fff;
+  animation: pop-in 0.5s var(--ease) forwards;
+}
+.form-success h3 { font-family: var(--font-display); font-size: 1.25rem; color: var(--ink); }
+.form-success p { font-size: 0.875rem; color: var(--ink-dim); max-width: 26rem; }
+
+/* =========================================================
+   CHECKLIST / "DÚVIDA?" SECTION
+   ========================================================= */
+.checklist {
+  margin-top: 48px; display: flex; flex-direction: column; gap: 12px;
+  max-width: 42rem;
+}
+.check-item {
+  display: flex; align-items: flex-start; gap: 14px; border: 1px solid var(--line);
+  background-color: var(--paper); border-radius: 6px; padding: 16px 18px;
+  font-size: 0.9375rem; color: var(--ink-dim); cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+.check-item:hover { border-color: var(--blue-line); transform: translateY(-2px); }
+.check-item input {
+  accent-color: var(--blue); width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px;
+}
+.check-item:has(input:checked) {
+  border-color: var(--blue); background-color: var(--paper-elev); color: var(--ink);
+}
+
+.checklist-result {
+  margin-top: 32px; max-width: 42rem; border: 1px solid var(--line);
+  background-color: var(--paper-soft); border-radius: 8px; padding: 28px;
+  display: flex; flex-direction: column; gap: 16px; align-items: flex-start;
+  transition: border-color 0.4s var(--ease), background-color 0.4s var(--ease);
+}
+.checklist-result.is-ready {
+  border-color: var(--blue-line); background-color: var(--paper-elev);
+}
+.checklist-result p {
+  font-family: var(--font-display); font-size: 1.125rem; color: var(--ink);
+  line-height: 1.5;
+}
+.checklist-counter {
+  font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--blue);
+}
 </style>
 
 </head>
@@ -1348,6 +1435,53 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     </div>
   </section>
 
+  <!-- SEÇÃO 7B — DÚVIDA? CHECKLIST -->
+  <section class="section">
+    <div class="container">
+      <div class="reveal">
+        <p class="eyebrow">Ainda em dúvida?</p>
+        <h2 class="heading-lg" style="margin-top:24px; max-width:42rem;">
+          Marque o que <span class="italic-blue">parece com a sua clínica</span> hoje
+        </h2>
+        <p class="lede" style="margin-top:16px;">
+          Se você marcar pelo menos 3 alternativas, vale a pena conversar com a Eleva.
+        </p>
+      </div>
+
+      <div class="checklist reveal delay-1" id="checklist">
+        <label class="check-item">
+          <input type="checkbox" />
+          Recebo leads todos os dias, mas não sei quantos realmente avançam no funil.
+        </label>
+        <label class="check-item">
+          <input type="checkbox" />
+          Minha equipe não faz um acompanhamento ativo dos pacientes em potencial.
+        </label>
+        <label class="check-item">
+          <input type="checkbox" />
+          Não tenho indicadores claros de leads, consultas, fechamentos e faturamento.
+        </label>
+        <label class="check-item">
+          <input type="checkbox" />
+          Tenho dificuldade em reter pacientes e gerar indicações.
+        </label>
+        <label class="check-item">
+          <input type="checkbox" />
+          Já investi em tráfego pago, mas não senti retorno em faturamento.
+        </label>
+      </div>
+
+      <div class="checklist-result reveal delay-2" id="checklistResult">
+        <span class="checklist-counter" id="checklistCounter">0 de 5 marcadas</span>
+        <p id="checklistMsg">Marque pelo menos 3 alternativas para vermos se a Eleva é o caminho certo pra sua clínica.</p>
+        <a href="#contato" class="btn btn--primary">
+          Quero conversar com a Eleva
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- SEÇÃO 8 — SOBRE A ELEVA -->
   <section class="section section--bordered" id="sobre">
     <div class="container about-grid">
@@ -1408,23 +1542,78 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
         </div>
       </div>
 
-      <form class="cta-form reveal delay-2" aria-label="Formulário de solicitação de diagnóstico estratégico">
-        <div class="form-field">
-          <label for="nome">Nome</label>
-          <input id="nome" name="nome" type="text" required placeholder="Seu nome" />
+      <form class="cta-form reveal delay-2" id="multiForm" aria-label="Formulário de solicitação de diagnóstico estratégico">
+        <div class="form-steps-indicator" aria-hidden="true">
+          <span class="step-dot is-active" data-dot="1"></span>
+          <span class="step-dot" data-dot="2"></span>
+          <span class="step-dot" data-dot="3"></span>
         </div>
-        <div class="form-field">
-          <label for="clinica">Nome da clínica</label>
-          <input id="clinica" name="clinica" type="text" required placeholder="Nome da sua clínica" />
+
+        <!-- Passo 1 — dados de contato -->
+        <div class="form-step" data-step="1">
+          <p class="form-step-label">Passo 1 de 3 — Seus dados</p>
+          <div class="form-field">
+            <label for="nome">Nome</label>
+            <input id="nome" name="nome" type="text" required placeholder="Seu nome" />
+          </div>
+          <div class="form-field">
+            <label for="clinica">Nome da clínica</label>
+            <input id="clinica" name="clinica" type="text" required placeholder="Nome da sua clínica" />
+          </div>
+          <div class="form-field">
+            <label for="whatsapp">WhatsApp</label>
+            <input id="whatsapp" name="whatsapp" type="tel" required placeholder="(00) 00000-0000" />
+          </div>
+          <div class="form-step-actions">
+            <button type="button" class="btn btn--primary" data-next>Continuar</button>
+          </div>
         </div>
-        <div class="form-field">
-          <label for="whatsapp">WhatsApp</label>
-          <input id="whatsapp" name="whatsapp" type="tel" required placeholder="(00) 00000-0000" />
+
+        <!-- Passo 2 — já investiu em tráfego pago -->
+        <div class="form-step" data-step="2" hidden>
+          <p class="form-step-label">Passo 2 de 3 — Tráfego pago</p>
+          <p class="lede" style="font-size:0.9375rem; margin-bottom:4px;">A sua clínica já investiu em tráfego pago para captar pacientes?</p>
+          <div class="option-list">
+            <label class="option-card"><input type="radio" name="trafego" value="resultado" required /> Já investi e tive resultado</label>
+            <label class="option-card"><input type="radio" name="trafego" value="sem-resultado" /> Já investi, mas não tive resultado</label>
+            <label class="option-card"><input type="radio" name="trafego" value="nunca" /> Nunca investi em tráfego pago</label>
+            <label class="option-card"><input type="radio" name="trafego" value="insatisfeito" /> Tenho agência hoje, mas estou insatisfeito</label>
+          </div>
+          <div class="form-step-actions">
+            <button type="button" class="btn btn--ghost" data-back>Voltar</button>
+            <button type="button" class="btn btn--primary" data-next>Continuar</button>
+          </div>
         </div>
-        <button type="submit" class="btn btn--primary btn--pulse" style="margin-top:8px;">
-          Solicitar Diagnóstico
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
-        </button>
+
+        <!-- Passo 3 — faturamento mensal -->
+        <div class="form-step" data-step="3" hidden>
+          <p class="form-step-label">Passo 3 de 3 — Faturamento</p>
+          <p class="lede" style="font-size:0.9375rem; margin-bottom:4px;">Qual o faturamento mensal aproximado da clínica hoje?</p>
+          <div class="option-list">
+            <label class="option-card"><input type="radio" name="faturamento" value="abaixo-30" required /> Abaixo de R$ 30 mil</label>
+            <label class="option-card"><input type="radio" name="faturamento" value="30-60" /> R$ 30 mil a R$ 60 mil</label>
+            <label class="option-card"><input type="radio" name="faturamento" value="60-100" /> R$ 60 mil a R$ 100 mil</label>
+            <label class="option-card"><input type="radio" name="faturamento" value="100-300" /> R$ 100 mil a R$ 300 mil</label>
+            <label class="option-card"><input type="radio" name="faturamento" value="acima-300" /> Acima de R$ 300 mil</label>
+          </div>
+          <div class="form-step-actions">
+            <button type="button" class="btn btn--ghost" data-back>Voltar</button>
+            <button type="submit" class="btn btn--primary btn--pulse">
+              Quero o Diagnóstico
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirmação -->
+        <div class="form-step form-success" data-step="success" hidden>
+          <div class="form-success-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <h3>Recebemos o seu diagnóstico!</h3>
+          <p>Em breve, um especialista da Eleva entra em contato pelo WhatsApp para agendar sua reunião estratégica.</p>
+        </div>
+
         <p class="form-note">Sua resposta é encaminhada diretamente ao time da Eleva.</p>
       </form>
     </div>
@@ -1597,21 +1786,91 @@ if (dashboard) {
   dashboardObserver.observe(dashboard);
 }
 
-// CONTACT FORM (placeholder — conecte a um endpoint real)
-const ctaForm = document.querySelector('.cta-form');
-if (ctaForm) {
-  ctaForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const submitBtn = ctaForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = 'Enviado — entraremos em contato';
-    submitBtn.disabled = true;
-    setTimeout(() => {
-      submitBtn.innerHTML = originalText;
-      submitBtn.disabled = false;
-      ctaForm.reset();
-    }, 3000);
+// MULTI-STEP FORM (placeholder — conecte a um endpoint real)
+const multiForm = document.getElementById('multiForm');
+if (multiForm) {
+  const steps = Array.from(multiForm.querySelectorAll('.form-step[data-step]'));
+  const dots = Array.from(multiForm.querySelectorAll('.step-dot'));
+  let current = 1;
+
+  function goToStep(n) {
+    steps.forEach((step) => {
+      step.hidden = step.dataset.step !== String(n);
+    });
+    dots.forEach((dot) => {
+      const i = parseInt(dot.dataset.dot, 10);
+      dot.classList.toggle('is-active', i === n);
+      dot.classList.toggle('is-done', i < n);
+    });
+    current = n;
+  }
+
+  function validateStep(n) {
+    const step = steps.find((s) => s.dataset.step === String(n));
+    const fields = step.querySelectorAll('input[required]');
+    for (const field of fields) {
+      if (field.type === 'radio') {
+        const group = step.querySelectorAll(`input[name="${field.name}"]`);
+        if (![...group].some((r) => r.checked)) {
+          field.reportValidity();
+          return false;
+        }
+      } else if (!field.value.trim()) {
+        field.reportValidity();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  multiForm.querySelectorAll('[data-next]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (validateStep(current)) goToStep(current + 1);
+    });
   });
+
+  multiForm.querySelectorAll('[data-back]').forEach((btn) => {
+    btn.addEventListener('click', () => goToStep(current - 1));
+  });
+
+  multiForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!validateStep(current)) return;
+
+    steps.forEach((step) => { step.hidden = step.dataset.step !== 'success'; });
+    multiForm.querySelector('.form-steps-indicator').style.display = 'none';
+    dots.forEach((dot) => dot.classList.add('is-done'));
+
+    setTimeout(() => {
+      multiForm.reset();
+      multiForm.querySelector('.form-steps-indicator').style.display = 'flex';
+      goToStep(1);
+    }, 6000);
+  });
+}
+
+// CHECKLIST "DÚVIDA?"
+const checklist = document.getElementById('checklist');
+if (checklist) {
+  const checkboxes = Array.from(checklist.querySelectorAll('input[type="checkbox"]'));
+  const result = document.getElementById('checklistResult');
+  const counter = document.getElementById('checklistCounter');
+  const msg = document.getElementById('checklistMsg');
+
+  function updateChecklist() {
+    const checked = checkboxes.filter((c) => c.checked).length;
+    counter.textContent = `${checked} de ${checkboxes.length} marcadas`;
+    if (checked >= 3) {
+      result.classList.add('is-ready');
+      msg.textContent = 'Boas notícias: a Eleva foi feita exatamente para resolver isso. Vamos conversar?';
+    } else {
+      result.classList.remove('is-ready');
+      msg.textContent = 'Marque pelo menos 3 alternativas para vermos se a Eleva é o caminho certo pra sua clínica.';
+    }
+  }
+
+  checkboxes.forEach((c) => c.addEventListener('change', updateChecklist));
+  updateChecklist();
 }
 </script>
 </body>
